@@ -1,0 +1,33 @@
+Manifest-Version: 1.0
+Class-Path: spring-boot-starter-aop-2.0.1.RELEASE.jar javassist-3.22.0
+ -GA.jar jackson-datatype-jdk8-2.9.5.jar snakeyaml-1.19.jar spring-orm
+ -5.0.5.RELEASE.jar validation-api-2.0.1.Final.jar attoparser-2.0.4.RE
+ LEASE.jar logback-classic-1.2.3.jar classmate-1.3.4.jar spring-contex
+ t-5.0.5.RELEASE.jar hibernate-commons-annotations-5.0.1.Final.jar thy
+ meleaf-extras-java8time-3.0.1.RELEASE.jar spring-boot-starter-jdbc-2.
+ 0.1.RELEASE.jar logback-core-1.2.3.jar jackson-datatype-jsr310-2.9.5.
+ jar spring-jdbc-5.0.5.RELEASE.jar log4j-to-slf4j-2.10.0.jar thymeleaf
+ -3.0.9.RELEASE.jar spring-data-jpa-2.0.6.RELEASE.jar antlr-2.7.7.jar 
+ dom4j-1.6.1.jar spring-boot-starter-thymeleaf-2.0.1.RELEASE.jar sprin
+ g-boot-2.0.1.RELEASE.jar json-path-2.2.0.jar spring-aop-5.0.5.RELEASE
+ .jar spring-aspects-5.0.5.RELEASE.jar thymeleaf-spring5-3.0.9.RELEASE
+ .jar jandex-2.0.3.Final.jar tomcat-embed-core-8.5.29.jar spring-core-
+ 5.0.5.RELEASE.jar jboss-logging-3.3.2.Final.jar javax.transaction-api
+ -1.2.jar log4j-api-2.10.0.jar jackson-databind-2.9.5.jar spring-boot-
+ starter-data-jpa-2.0.1.RELEASE.jar HikariCP-2.7.8.jar spring-web-5.0.
+ 5.RELEASE.jar hibernate-validator-6.0.9.Final.jar jackson-module-para
+ meter-names-2.9.5.jar jackson-core-2.9.5.jar hibernate-core-5.2.16.Fi
+ nal.jar spring-webmvc-5.0.5.RELEASE.jar hibernate-jpa-2.1-api-1.0.0.F
+ inal.jar asm-5.0.3.jar spring-boot-starter-json-2.0.1.RELEASE.jar unb
+ escape-1.1.5.RELEASE.jar spring-boot-starter-web-2.0.1.RELEASE.jar sp
+ ring-data-commons-2.0.6.RELEASE.jar mysql-connector-java-8.0.9-rc.jar
+  spring-boot-starter-tomcat-2.0.1.RELEASE.jar javax.annotation-api-1.
+ 3.2.jar spring-expression-5.0.5.RELEASE.jar slf4j-api-1.7.25.jar spri
+ ng-boot-starter-logging-2.0.1.RELEASE.jar jackson-annotations-2.9.0.j
+ ar spring-jcl-5.0.5.RELEASE.jar tomcat-embed-el-8.5.29.jar json-smart
+ -2.2.1.jar spring-boot-autoconfigure-2.0.1.RELEASE.jar jul-to-slf4j-1
+ .7.25.jar accessors-smart-1.1.jar spring-boot-starter-2.0.1.RELEASE.j
+ ar spring-tx-5.0.5.RELEASE.jar spring-beans-5.0.5.RELEASE.jar tomcat-
+ embed-websocket-8.5.29.jar aspectjweaver-1.8.13.jar
+Main-Class: cn.kastner.chemiety.ChemietyApplication
+

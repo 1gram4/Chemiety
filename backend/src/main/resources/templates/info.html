@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> <!-- #409EFF -->
+    <!-- import axios -->
+    <script src="https://unpkg.com/axios/dist/axios.js"></script>
+    <!-- import Vue before Element -->
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+    <!-- import JavaScript -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <title>公告管理</title>
+    <style type="text/css">
+　　      a { text-decoration: none !important}
+　　      publish { margin: 20px }
+　　 </style>
+</head>
+<body>
+<div id="app">
+    <el-container>
+        <el-header>
+            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
+                <el-menu-item index="1"><a href="/admin/index">首页</a></el-menu-item>
+                <el-menu-item index="2"><a href="/admin/posts">帖子管理</a></el-menu-item>
+                <el-menu-item index="3"><a href="/admin/infos">公告管理</a></el-menu-item>
+                <el-submenu index="5">
+                    <template slot="title">资料设置</template>
+                    <el-menu-item index="5-1"><a href="/admin/uploadEduFilePage">课件/文档上传</a></el-menu-item>
+                    <el-menu-item index="5-2"><a href="/admin/uploadShowFilePage">优秀作品上传</a></el-menu-item>
+                    <el-menu-item index="5-3"><a href="/admin/addWebsitePage">参考链接设置</a></el-menu-item>
+                </el-submenu>
+                <el-menu-item index="6"><a href="/logoutPage">登出</a></el-menu-item>
+
+            </el-menu>
+        </el-header>
+        <el-main>
+            <el-row type="flex" justify="center">
+                <el-col :span="10">
+                    <el-card>
+                        <div slot="header" class="clearfix">
+                            <span>新建公告</span>
+                        </div>
+                        <el-form label-position="right" label-width="80px">
+                            <el-form-item label="主题">
+                                <el-input
+                                        type="textarea"
+                                        margin-bottom="20px"
+                                        autosize
+                                        placeholder="请输入主题"
+                                        v-model="infoInput.title">
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="公告内容">
+                                <el-input
+                                        type="textarea"
+                                        margin-bottom="20px"
+                                        autosize
+                                        placeholder="请输入内容"
+                                        v-model="infoInput.content">
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="createInfo" style="float:right">发布</el-button>
+                            </el-form-item>
+                        </el-form>
+
+                    </el-card>
+                    <transition-group name="el-zoom-in-top">
+                        <div v-for="(info, index) in infos" style="padding-top: 30px" :key="info.infoId">
+                            <el-card>
+                                <div slot="header" class="clearfix">
+                                    <span>主题：{{ info.title }}</span>
+                                    <el-button style="float: right; padding: 3px 0; color: #F56C6C;"
+                                               type="text" @click="deleteInfo(info.infoId, index)">删除</el-button>
+                                </div>
+                                <div style="margin-bottom: 50px">
+                                    {{ info.content }}
+                                </div>
+                                <p style="color: #909399; text-align: right">{{ info.user.name }}</p>
+                                <p style="color: #909399; text-align: right">{{ info.createDate }}</p>
+                            </el-card>
+                        </div>
+                    </transition-group>
+                </el-col>
+            </el-row>
+
+
+        </el-main>
+    </el-container>
+</div>
+</body>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data () {
+            return {
+                activeIndex: '3',
+                currentTime: '',
+                hasClassTable: false,
+                infoInput: {
+                    title: '',
+                    content: ''
+                },
+                infos: []
+            }
+        },
+        created () {
+            this.getInfos()
+        },
+        methods: {
+            getInfos() {
+                axios({
+                    url: '/api/v1/infos',
+                    method: 'GET',
+                })
+                    .then(res => {
+                        this.infos = res.data.result
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            },
+            createInfo() {
+                axios({
+                    url: '/api/v1/infos',
+                    method: 'POST',
+                    params: this.infoInput
+                })
+                    .then(res => {
+                        if (res.data.status == 0) {
+                            this.$message({
+                                message: '发布公告成功',
+                                type: 'success'
+                            });
+                            this.infos.unshift(
+                                res.data.result
+                            )
+                            this.infoInput.title = ''
+                            this.infoInput.content = ''
+                        } else {
+                            this.$message({
+                                message: res.data.result,
+                                type: 'error'
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        this.$message({
+                            message: '未知错误',
+                            type: 'error'
+                        });
+                    })
+            },
+            deleteInfo (id, index) {
+                this.infos.splice(index, 1)
+                axios({
+                    url: '/api/v1/infos/' + id,
+                    method: 'DELETE'
+                })
+                    .then( response => {
+                        if (response.data.status == 0) {
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功！'
+                            })
+                        } else {
+                            this.$message.error(response.data.result)
+                        }
+                    })
+                    .catch( error => {
+                        this.$message.error(error)
+                    })
+            },
+            getCurrentDate () {
+                let now = new Date();
+
+                let year = now.getFullYear();       //年
+                let month = now.getMonth() + 1;     //月
+                let day = now.getDate();            //日
+
+                let clock = year + "-";
+
+                if(month < 10)
+                    clock += "0";
+
+                clock += month + "-";
+
+                if(day < 10)
+                    clock += "0";
+
+                clock += day + " ";
+
+                return(clock);
+            }
+        }
+    })
+</script>
+</html>

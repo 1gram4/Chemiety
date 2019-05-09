@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> <!-- #409EFF -->
+    <!-- import axios -->
+    <script src="https://unpkg.com/axios/dist/axios.js"></script>
+    <!-- import Vue before Element -->
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+    <!-- import JavaScript -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <title>优秀作品上传</title>
+</head>
+<style>
+    a { text-decoration: none !important}
+</style>
+<body>
+<div id="app">
+    <el-container>
+        <el-header>
+            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
+                <el-menu-item index="1"><a href="/admin/index">首页</a></el-menu-item>
+                <el-menu-item index="2"><a href="/admin/posts">帖子管理</a></el-menu-item>
+                <el-menu-item index="3"><a href="/admin/infos">公告管理</a></el-menu-item>
+                <el-submenu index="5">
+                    <template slot="title">资料设置</template>
+                    <el-menu-item index="5-1"><a href="/admin/uploadEduFilePage">课件/文档上传</a></el-menu-item>
+                    <el-menu-item index="5-2"><a href="/admin/uploadShowFilePage">优秀作品上传</a></el-menu-item>
+                    <el-menu-item index="5-3"><a href="/admin/addWebsitePage">参考链接设置</a></el-menu-item>
+                </el-submenu>
+                <el-menu-item index="6"><a href="/logoutPage">登出</a></el-menu-item>
+            </el-menu>
+        </el-header>
+        <el-main>
+            <el-row type="flex" justify="center">
+                <el-col :span="10">
+                    <el-card>
+                        <div slot="header" class="clearfix">
+                            <span>优秀作品上传</span>
+                        </div>
+                        <div>
+                            <el-form label-position="right" label-width="120px">
+                                <el-form-item label="作者姓名">
+                                    <el-input v-model="uploadParam.author"
+                                              placeholder="请输入作者姓名，用逗号分隔"
+                                              clearable></el-input>
+                                </el-form-item>
+                                <el-form-item label="选择上传文件">
+                                    <el-upload
+                                            ref="upload"
+                                            action="/api/v1/admin/uploadFiles"
+                                            :data="uploadParam"
+                                            :on-preview="handlePreview"
+                                            :on-remove="handleRemove"
+                                            :uploadFile-list="fileList"
+                                            :on-success="getAllShowFiles"
+                                            :auto-upload="false">
+                                        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                                        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                                        <div class="el-upload__tip" slot="tip">每个文件最大20M，一次最多可上传100M文件，上传后刷新显示</div>
+                                    </el-upload>
+                                </el-form-item>
+                            </el-form>
+                        </div>
+                    </el-card>
+                </el-col>
+            </el-row>
+            <el-row type="flex" justify="center">
+                <el-col :span="16">
+                    <h1>当前文件列表</h1>
+                    <el-table
+                            :data="tableData"
+                            stripe
+                            style="width: 100%">
+                        <el-table-column
+                                prop="name"
+                                label="文件名称"
+                                width="420">
+                        </el-table-column>
+                        <el-table-column
+                                prop="date"
+                                label="上传日期"
+                                width="180">
+                        </el-table-column>
+                        <el-table-column
+                                prop="author"
+                                label="作者"
+                                width="180">
+                        </el-table-column>
+                        <el-table-column
+                                prop="control"
+                                label="操作">
+                            <template slot-scope="scope">
+                                <el-button
+                                        size="mini"
+                                        type="danger"
+                                        @click="handleDelete(scope.$index, scope.row.fileId)">删除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </el-col>
+            </el-row>
+        </el-main>
+    </el-container>
+</div>
+</body>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data () {
+            return {
+                activeIndex: '5',
+                currentTime: '',
+                hasClassTable: false,
+                action: '',
+                uploadParam: {
+                    author: '',
+                    type: 'SHOW'
+                },
+
+                fileList: [],
+                tableData: []
+            }
+        },
+        created () {
+            this.getAllShowFiles()
+        },
+        methods: {
+            submitUpload() {
+                this.$refs.upload.submit();
+            },
+            handleRemove(uploadFile, fileList) {
+                console.log(uploadFile, fileList);
+            },
+            handlePreview(uploadFile) {
+                console.log(uploadFile);
+            },
+            handleEdit(index, row) {
+                console.log(index, row);
+            },
+            handleDelete(index, fileId) {
+                this.tableData.splice(index, 1)
+                axios({
+                    url: '/api/v1/admin/deleteFile',
+                    method: 'POST',
+                    params: {
+                        fileId: fileId
+                    }
+                })
+                    .then( res => {
+                        if (res.data.status === 0) {
+                            this.$message({
+                                type: 'success',
+                                message: res.data.result
+                            })
+                        } else {
+                            this.$message.error(res.data.result)
+                        }
+                    })
+                    .catch( err => {
+                        this.$message.error(err)
+                    })
+
+            },
+            getAllShowFiles () {
+                this.uploadParam.author = ''
+                axios({
+                    url: '/api/v1/admin/getAllFiles',
+                    method: 'POST',
+                    params: {
+                        fileType: 'show'
+                    }
+                })
+                    .then( response => {
+                        this.tableData = response.data.result
+                    })
+                    .catch( error => {
+                        this.$message.error(error)
+                    })
+            }
+        }
+    })
+</script>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> <!-- #409EFF -->
+    <!-- import axios -->
+    <script src="https://unpkg.com/axios/dist/axios.js"></script>
+    <!-- import Vue before Element -->
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+    <!-- import JavaScript -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <title>首页</title>
+    <style type="text/css">
+    　　a { text-decoration: none !important}
+    　　
+　　 </style>
+</head>
+<body>
+<div id="app">
+    <el-container>
+        <el-header>
+            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
+                <el-menu-item index="1"><a href="/admin/index">首页</a></el-menu-item>
+                <el-menu-item index="2"><a href="/admin/posts">帖子管理</a></el-menu-item>
+                <el-menu-item index="3"><a href="/admin/infos">公告管理</a></el-menu-item>
+                <el-submenu index="5">
+                    <template slot="title">资料设置</template>
+                    <el-menu-item index="5-1"><a href="/admin/uploadEduFilePage">课件/文档上传</a></el-menu-item>
+                    <el-menu-item index="5-2"><a href="/admin/uploadShowFilePage">优秀作品上传</a></el-menu-item>
+                    <el-menu-item index="5-3"><a href="/admin/addWebsitePage">参考链接设置</a></el-menu-item>
+                </el-submenu>
+                <el-menu-item index="6"><a href="/logoutPage">登出</a></el-menu-item>
+
+            </el-menu>
+        </el-header>
+        <el-main>
+            <el-card>
+                <h1>欢迎，{{user.name}}</h1>
+                <p>当前时间: {{currentTime}}</p>
+                <!--<p>下节上课：<span style="color: #67C23A;">2018-04-27 8:00</span></p>-->
+            </el-card>
+        </el-main>
+    </el-container>
+</div>
+</body>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data () {
+            return {
+                activeIndex: '1',
+                currentTime: '',
+                user: {},
+            }
+        },
+        created () {
+            this.getCurrentTime()
+            this.getUserInfo()
+        },
+        methods: {
+            /**
+             * @return {string}
+             */
+            getCurrentTime () {
+                let now = new Date();
+
+                let year = now.getFullYear();       //年
+                let month = now.getMonth() + 1;     //月
+                let day = now.getDate();            //日
+
+                let hh = now.getHours();            //时
+                let mm = now.getMinutes();          //分
+
+                let clock = year + "-";
+
+                if(month < 10)
+                    clock += "0";
+
+                clock += month + "-";
+
+                if(day < 10)
+                    clock += "0";
+
+                clock += day + " ";
+
+                if(hh < 10)
+                    clock += "0";
+
+                clock += hh + ":";
+                if (mm < 10) clock += '0';
+                clock += mm;
+                this.currentTime = clock;
+            },
+            getUserInfo () {
+                axios({
+                    url: '/api/v1/getUserInfo',
+                    method: 'POST',
+                })
+                    .then(response => {
+                        this.user = response.data.result
+                    })
+                    .catch(error =>{
+                        this.$message.error(error)
+                    })
+            }
+        }
+    })
+</script>
+</html>

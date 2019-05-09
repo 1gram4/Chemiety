@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> <!-- #409EFF -->
+    <!-- import axios -->
+    <script src="https://unpkg.com/axios/dist/axios.js"></script>
+    <!-- import Vue before Element -->
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+    <!-- import JavaScript -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <title>权限错误</title>
+    <style type="text/css">
+    　　a { text-decoration: none !important}
+　　 </style>
+</head>
+<body>
+<div id="app">
+    <el-container>
+        <el-header>
+            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
+                <el-menu-item index="1"><a href="/admin/index">首页</a></el-menu-item>
+                <el-menu-item index="2"><a href="/admin/posts">帖子管理</a></el-menu-item>
+                <el-menu-item index="3"><a href="/admin/infos">公告管理</a></el-menu-item>
+                <el-submenu index="5">
+                    <template slot="title">资料设置</template>
+                    <el-menu-item index="5-1"><a href="/admin/uploadEduFilePage">课件/文档上传</a></el-menu-item>
+                    <el-menu-item index="5-2"><a href="/admin/uploadShowFilePage">优秀作品上传</a></el-menu-item>
+                    <el-menu-item index="5-3"><a href="/admin/addWebsitePage">参考链接设置</a></el-menu-item>
+                </el-submenu>
+                <el-menu-item index="6"><a href="/logoutPage">登出</a></el-menu-item>
+
+            </el-menu>
+        </el-header>
+        <el-main>
+            <el-card>
+                <h1>权限错误！</h1>
+            </el-card>
+        </el-main>
+    </el-container>
+</div>
+</body>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data () {
+            return {
+                activeIndex: '1',
+                currentTime: '',
+                hasClassTable: false
+            }
+        },
+        created () {
+        },
+        methods: {
+
+        }
+    })
+</script>
+</html>

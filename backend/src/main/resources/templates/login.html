@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> <!-- #409EFF -->
+    <!-- import axios -->
+    <script src="https://unpkg.com/axios/dist/axios.js"></script>
+    <!-- import Vue before Element -->
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+    <!-- import JavaScript -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="md5.js"></script>
+    <title>登录</title>
+    <style type="text/css">
+        　　 a { text-decoration: none !important}
+　　 </style>
+</head>
+<body>
+<div id="app">
+    <el-container>
+        <el-header>
+            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
+                <el-menu-item index="1"><a href="/admin/index"  style="text-decoration: none">首页</a></el-menu-item>
+                <el-menu-item index="2"><a href="/admin/posts" style="text-decoration: none">帖子管理</a></el-menu-item>
+                <el-menu-item index="3"><a href="/admin/infos" style="text-decoration: none">公告管理</a></el-menu-item>
+                <el-submenu index="5">
+                    <template slot="title">资料设置</template>
+                    <el-menu-item index="5-1"><a href="/admin/uploadEduFilePage" style="text-decoration: none">课件/文档上传</a></el-menu-item>
+                    <el-menu-item index="5-2"><a href="/admin/uploadShowFilePage" style="text-decoration: none">优秀作品上传</a></el-menu-item>
+                    <el-menu-item index="5-3"><a href="/admin/addWebsitePage" style="text-decoration: none">参考链接设置</a></el-menu-item>
+                </el-submenu>
+            </el-menu>
+        </el-header>
+        <el-main>
+            <el-row justify="center" type="flex">
+                <el-col :span="8">
+                    <el-card>
+                        <h1 style="text-align: center">登录</h1>
+                        <el-form label-position="right" label-width="80px">
+                            <el-form-item label="账号">
+                                <el-input placeholder="请输入账号"
+                                          v-model="username"
+                                          type="text"
+                                          clearable>
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="密码">
+                                <el-input placeholder="请输入密码"
+                                          v-model="password"
+                                          type="password"
+                                          @keyup.Enter.native="login"
+                                          clearable>
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="login" >登录</el-button>
+                            </el-form-item>
+                        </el-form>
+
+
+                    </el-card>
+                </el-col>
+            </el-row>
+        </el-main>
+    </el-container>
+</div>
+</body>
+<script>
+    let md5 = hex_md5
+    let app = new Vue({
+        el: '#app',
+        data () {
+            return {
+                activeIndex: '1',
+                username: '',
+                password: ''
+            }
+        },
+        created () {
+        },
+        methods: {
+            login () {
+                axios({
+                    url: '/api/v1/login',
+                    method: 'POST',
+                    params: {
+                        username: this.username,
+                        password: md5(this.password)
+                    }
+                })
+                    .then(response => {
+                        if (response.data.status === 0) {
+                            window.location.href = '/admin/index'
+                        } else {
+                            this.$message.error(response.data.result)
+                        }
+                    })
+                    .catch(error => {
+                        this.$message.error(error)
+                    })
+
+            }
+        }
+    })
+</script>
+</html>

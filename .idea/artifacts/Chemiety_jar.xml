@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Chemiety:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Chemiety_jar</output-path>
+    <root id="archive" name="Chemiety.jar" />
+  </artifact>
+</component>
